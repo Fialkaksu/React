@@ -18,9 +18,10 @@ import React from 'react';
 import { moviesData } from '../moviesData';
 
 import MovieItem from './MovieItem';
-console.log(moviesData);
+// console.log(moviesData);
 
-// UI=function(state)
+// UI=function(state, props)
+
 // функциональный компонент или state-less
 // глупый компонент
 // function App() {
@@ -32,7 +33,8 @@ class App extends React.Component {
     super();
 
     this.state = {
-      movies: moviesData
+      movies: moviesData,
+      moviesWillWatch: []
     }
 
     // this.removeMovie=this.removeMovie.bind(this);
@@ -46,7 +48,7 @@ class App extends React.Component {
       return item.id !== movie.id;
     })
     // console.log(movie.id);
-    console.log(updateMovies);
+    // console.log(updateMovies);
     // this.state.movies=updateMovies;
     // после обновления виртуального дома обновляем состояние
     this.setState({
@@ -54,25 +56,59 @@ class App extends React.Component {
     })
   }
 
+  addMovieToWillWatch = movie => {
+    // console.log(movie);
+    // this.state.moviesWillWatch.push(movie);
+    // const updateMoviesWillWatch= [...this.state.moviesWillWatch];
+    // updateMoviesWillWatch.push(movie);
+    const updateMoviesWillWatch= [...this.state.moviesWillWatch, movie];
+
+    this.setState({
+      moviesWillWatch: updateMoviesWillWatch
+    })
+  }
+
+  removeMovieFromWillWatch = movie => {
+    const updateMoviesWillWatch = this.state.moviesWillWatch.filter(function (item) {
+      return item.id !== movie.id;
+    })
+    this.setState({
+      moviesWillWatch: updateMoviesWillWatch
+    })
+  }
+
   // добавляет элементы в DOM
+  // render() превращает виртуальный DOM в DOM
   render() {
-    console.log(this);
+    // console.log(this);
     console.log('render', this.state);
     // можно рендерить массивы:
     // return <div>{[1,2,3,4,5]}</div>
     return (
-      <div>
-        {this.state.movies.map(movie => {
-          // добавляем key, чтобы не просто перезатирать текста при ререндере, 
-          // а производить смещение(удаление) нужного компонента с фильмом
-          return (
-            <MovieItem
-              key={movie.id}
-              movie={movie}
-              removeMovie={this.removeMovie}
-            />
-          );
-        })}
+      <div className="container">
+        <div className="row">
+          <div className="col-9">
+            <div className="row">
+              {this.state.movies.map(movie => {
+                // добавляем key, чтобы не просто перезатирать текста при ререндере, 
+                // а производить смещение(удаление) нужного компонента с фильмом
+                return (
+                  <div className="col-6 mb-4" key={movie.id}>
+                    <MovieItem
+                      movie={movie}
+                      removeMovie={this.removeMovie}
+                      addMovieToWillWatch={this.addMovieToWillWatch}
+                      removeMovieFromWillWatch={this.removeMovieFromWillWatch}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+          <div className="col-3">
+            <p>Will Watch: {this.state.moviesWillWatch.length}</p>
+          </div>
+        </div>
       </div>
     );
   }
