@@ -1,6 +1,7 @@
 import React from "react";
-import { moviesData } from "../moviesData";
+// import { moviesData } from "../moviesData";
 import MovieItem from "./MovieItem";
+import {API_URL, API_KEY_3} from '../utils/api';
 
 // UI = fn(state, props)
 
@@ -11,9 +12,30 @@ class App extends React.Component {
     super();
 
     this.state = {
-      movies: moviesData,
+      // movies: moviesData,
+      movies: [],
       moviesWillWatch: []
     };
+
+    console.log('constructor');
+  }
+
+  // срабатывает один раз при первоначальном рендере страницы(монтирование)
+  componentDidMount(){
+    console.log('didMount');
+    fetch(`${API_URL}/discover/movie?api_key=${API_KEY_3}&sort_by=popularity_desc`)
+      .then((response) => {
+        // console.log('then', data);
+        console.log('then', response);
+        return response.json();
+      })
+      .then((data) => {
+        console.log('data', data);
+        this.setState({
+          movies: data.results
+        })
+      })
+      // console.log('afterFetch');
   }
 
   deleteMovie = movie => {
@@ -47,12 +69,14 @@ class App extends React.Component {
   };
 
   render() {
-    console.log("render", this);
+    // console.log("render", this);
+    console.log('render');
     return (
       <div className="container">
         <div className="row mt-4">
           <div className="col-9">
             <div className="row">
+              <MovieTabs />
               {this.state.movies.map(movie => {
                 return (
                   <div className="col-6 mb-4" key={movie.id}>
