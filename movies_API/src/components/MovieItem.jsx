@@ -5,6 +5,13 @@ class MovieItem extends React.Component {
     willWatch: false
   };
 
+  // размонтирование
+  // к примеру, вызывается перед удалением компонента из DOM
+  // или при применении фильтра, изменение в DOM
+  // componentWillUnmount() {
+  //   console.log('unmount', this.props.data.title);
+  // }
+
   render() {
     const {
       data,
@@ -50,7 +57,7 @@ class MovieItem extends React.Component {
                   }}
                 >
                   Will Watch
-              </button>
+                </button>
               )}
           </div>
           <button
